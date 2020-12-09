@@ -71,7 +71,7 @@ body {
   margin: 10px 0;
 }
 
-#start button
+#start button, #score > a
 {
   background-color: #e60300;
   text-transform: uppercase;
@@ -103,6 +103,8 @@ body {
 
 #game {
   display: flex;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   flex-flow: column;
   align-items: stretch;
   height: 100vh;
@@ -161,6 +163,8 @@ h3 {
 #challengers {
   flex: 1 1 auto;
 	display: flex;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -199,6 +203,8 @@ h3 {
 
 #challengers figure {
     display: flex;
+  display: -ms-flexbox;
+  display: -webkit-flex;
     flex-flow: column;
     padding: 0px;
     width: 100%;
@@ -259,6 +265,10 @@ figcaption a {
   color:#e60300;
 }
 
+#score {
+  text-align: center;
+}
+
 .meter { 
     height: 20px;
     position: relative;
@@ -298,6 +308,7 @@ figcaption a {
   width: 90%;
   max-width: 400px;
   margin: 30px auto;
+  text-align: justify;
 }
 
 #failures
@@ -307,6 +318,8 @@ figcaption a {
 
 ul{
   display: flex;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   flex-direction: row;
   flex-wrap:  wrap;
   list-style: none;
@@ -325,6 +338,11 @@ ul a {
   border: 1px solid #e60300;
   padding : 3px;
   border-radius: 10px;
+}
+
+#score > a
+{
+  margin: 10px 0;
 }
 
 .hidden {
