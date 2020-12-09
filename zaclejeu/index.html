@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="resources/style.css"/>
+<title>Zac Efron Love</title>
+</head>
+<body>
+
+	<div id="start">
+		<h1><p>Zac</p><p>Love</p><p>Efron</p></h1>
+
+		<h3>Le test de compatibilité ultime</h3>
+		<button onclick="startGame()">Commencer</button>
+
+		<p>
+		<img src="resources/zachead.png">
+		</p>
+
+</div>
+	</div>
+
+	<div id="game" class="hidden">
+	<h1><p>Zac</p><p>Love</p><p>Efron</p></h1>
+	<div id=title>
+		<h2 id="title1">Tu préfères</h2>
+		<h3><span id="title2">être obligé·e</span> <span id="title3">de te marier</span></h3>
+		<h3 id="title4">avec...</h3>
+	</div>
+
+	<div id=challengers>
+
+	<button id="left" class="hidden" onclick="chooseLeft()">
+	<figure >
+		<img id="zac-img"></img>
+		<figcaption>Zac Efron</figcaption>
+	</figure>
+	</button>
+
+	<p id="versus" class="hidden">vs</p>
+
+	<button id="right" class="hidden" onclick="chooseRight()">
+	<figure>
+<img id="other-img"></img>
+<figcaption id="other-name"></figcaption>
+	</figure>
+	</button>
+	</div>
+
+	<p id="progression"></p>
+	</div>
+
+	<div id="score" class="hidden">
+
+		<h1><p>Zac</p><p>Love</p><p>Efron</p></h1>
+		<div class="meter">
+		<span id="progressbar" style="width:0%;"><span class="progressbar"></span></span>
+		</div>
+
+		<span id="percentage"></span>.
+
+		<img id="finalzac">
+
+		<div id="finaltext">
+			<p id="0-20" class="hidden">
+				Tu es bien décidément un cas desespéré. Si le beau visage angélique de Zac
+				ne te fait pas fondre, c'est décidément que tu as vraiment un cœur de pierre.
+				As-tu réellement bien vu son beau sourire et ses abdos saillants ? Ne serais-tu
+				pas Gérald Darmanin pour être aussi insensible ?
+			</p>
+			<p id="20-40" class="hidden">
+				Tu es passable, malheureusement tu ne pourras pas vivre une véritable
+				idylle avec Zac pour l'instant. Mais ne désespère pas. Essaie peut-être
+				de regarder à nouveau High School Musical 2 (c'est le meilleur) et concentre
+				toi bien sur son sourire et ses abdos. Tu verras que tu sauras te laisser séduire.
+			</p>
+			<p id="40-60" class="hidden">
+				Bravo tu es sur la bonne voie. On sent que ton intérêt pour Zac est bien là, mais 
+				il te faudra encore progresser si tu veux réellement faire fondre le cœur de Zac.
+				Savais-tu qu'il sait danser et chanter EN MÊME TEMPS (quel talent!). Et je ne t'ai
+				pas encore parlé de son sourire et de ses abdominaux.
+			</p>
+			<p id="60-80" class="hidden">
+				Yes ! Pas mal du tout. Zac et toi, vous avez un peu un bon feeling non ? C'est peut-être
+				le début d'une belle romance qui s'annonce entre vous. J'imagine que son beau sourire et
+				ses abdos ne t'ont pas laissé·e indifférent·e.
+			</p>
+			<p id="80-100" class="hidden">
+				C'est peut-être le start of something new qui s'annonce. On sent bien que Zac ne te laisse pas de
+				marbre. Il est effectivement très certainement ton âme sœur. Finirez vous ensemble, son sourire, ses abdos et toi ? Bet on it !
+			</p>
+			<p id="100" class="hidden">
+				Wahooou ! Tu es vraiment la Vanessa Hudgens du 21e siècle. Je vous imagine tous les deux sur
+				une plage: le ciel bleu, les albatros, son sourire et ses abdominaux. Personne ne peut rivaliser
+				avec toi.
+			</p>
+
+			<p id="failures" class="hidden">
+			Tu as préféré à Zac:
+		<ul id="failuresList">
+		</ul>
+		</p>
+		</div>
+	</div>
+
+<script>
+var failures = [];
+var currentdata;
+var isplaying = true;
+var numMatches = 0;
+var totalMatches = 20;
+var score = 0;
+
+function newMatch() {
+
+	updateScore();
+
+	var left = document.getElementById("left");
+	var right = document.getElementById("right");
+	var versus = document.getElementById("versus");
+
+	/* hide challengers */
+	left.classList.add("hidden");
+	left.classList.remove("challenger");
+	right.classList.add("hidden");
+	right.classList.remove("challenger");
+	versus.classList.add("hidden");
+	versus.classList.remove("versus");
+
+	var xhr = new XMLHttpRequest ();
+	var url = "https://fr.wikipedia.org/w/api.php?origin=*&format=json&action=query&generator=random&grnnamespace=0&prop=pageimages|info&piprop=thumbnail&pithumbsize=500&inprop=url";
+	xhr.open('GET', url, true);
+
+	/* remove previous image */
+	document.getElementById("other-img").src = "";
+	xhr.onload = function() {
+		/* start animations */
+		left.classList.add("challenger");
+		left.classList.remove("hidden");
+		right.classList.add("challenger");
+		right.classList.remove("hidden");
+		versus.classList.add("versus");
+		versus.classList.remove("hidden");
+
+		var data = JSON.parse(this.response);
+		currentdata = data;
+
+		for(var i in data.query.pages) {
+			var page = data.query.pages[i];
+			document.getElementById("other-name").innerHTML = page.title + ' <a href="'+ page.fullurl +'" onclick="openLink(this.href); return false;">[?]</a>';
+			if(page.hasOwnProperty("thumbnail")) {
+				document.getElementById("other-img").src = page.thumbnail.source;
+			}
+			else
+			{
+				document.getElementById("other-img").src = "resources/unknown.png";
+			}
+		}
+	}
+
+	xhr.send();
+
+	/* choose random image */
+	var numZacs = 13.9;
+	var randomZac = Math.floor(Math.random() * numZacs);
+	document.getElementById("zac-img").src = "resources/zac/"+randomZac+".jpg";
+}
+
+function startGame()
+{
+	document.getElementById("start").classList.add("hidden");
+	document.getElementById("game").classList.remove("hidden");
+	setTimeout(newMatch, 3300);
+	updateScore();
+}
+
+function updateScore() {
+	document.getElementById("progression").innerHTML = (numMatches+1) + "/" + totalMatches;
+}
+
+function chooseLeft(){
+	if(!isplaying) return;
+	score += 1;
+
+	numMatches += 1;
+	if(numMatches == totalMatches)
+	{
+		endGame();
+	}
+	else
+	{
+		newMatch();
+	}
+}
+
+function chooseRight(){
+	if(!isplaying) return;
+	/* save chosen */
+	for(var i in currentdata.query.pages) {
+		failures.push(currentdata.query.pages[i]);
+	}
+
+	numMatches += 1;
+	if(numMatches == totalMatches)
+	{
+		endGame();
+	}
+	else
+	{
+		newMatch();
+	}
+}
+
+function openLink(url){
+	window.open(url,'_blank');
+	isplaying = false;
+	setTimeout(() => { isplaying = true;}, 100);
+	return false;
+}
+
+function endGame(){
+	document.getElementById("game").classList.add("hidden");
+	document.getElementById("score").classList.remove("hidden");
+
+	var percentage = 100*score/totalMatches;
+	document.getElementById("percentage").innerHTML = percentage + "%";
+
+	/* final zac */
+	var iscore = Math.floor(score/totalMatches*10);
+	var finalzac;
+	switch(iscore) {
+			case 0:
+				finalzac = "0.gif"
+				break;
+			case 1:
+				finalzac = "1.jpg"
+				break;
+			case 2:
+				finalzac = "2.webp"
+				break;
+			case 3:
+				finalzac = "3.jpg"
+				break;
+			case 4:
+				finalzac = "4.jpg"
+				break;
+			case 5:
+				finalzac = "5.jpg"
+				break;
+			case 6:
+				finalzac = "6.jpg"
+				break;
+			case 7:
+				finalzac = "7.jpg"
+				break;
+			case 8:
+				finalzac = "8.gif"
+				break;
+			case 9:
+				finalzac = "9.gif"
+				break;
+			case 10:
+				finalzac = "10.gif"
+				break;
+			default:
+				break;
+	}
+	switch(iscore) {
+			case 0:
+			case 1:
+				document.getElementById("0-20").classList.remove("hidden");
+				break;
+			case 2:
+			case 3:
+				document.getElementById("20-40").classList.remove("hidden");
+				break;
+			case 4:
+			case 5:
+				document.getElementById("40-60").classList.remove("hidden");
+				break;
+			case 6:
+			case 7:
+				document.getElementById("60-80").classList.remove("hidden");
+				break;
+			case 8:
+			case 9:
+				document.getElementById("80-100").classList.remove("hidden");
+				break;
+			case 10:
+				document.getElementById("100").classList.remove("hidden");
+				break;
+	}
+	if(percentage != 100)
+	{
+		document.getElementById("failures").classList.remove("hidden");
+	}
+	document.getElementById("finalzac").src = "resources/finalzac/"+finalzac;
+
+	setTimeout( () => {
+		document.getElementById("progressbar").style = "width: "+ percentage +"%!important;";
+	}, 100);
+
+	var list = document.getElementById("failuresList");
+	failures.forEach(function (el, i) {
+		var li = document.createElement("li");
+		li.innerHTML = '<a href="'+ el.fullurl + '" target="_blank">'+ el.title + '</a>';
+		list.appendChild(li);
+	});
+}
+</script>
+
+</body>
+</html>
